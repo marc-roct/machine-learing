@@ -5,8 +5,9 @@ np.random.seed(40)
 print
 "hello"
 
-class Network(object):
 
+class Network(object):
+    bestNetwork = (0, 0)
     def __init__(self, sizes):
         self.num_layers = len(sizes)
         self.sizes = sizes
@@ -36,7 +37,7 @@ class Network(object):
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
-            for mini_batch in mini_batches:
+            for mini_batch in mini_batches:  # dont forget to uncomment
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
                 print("Epoch {0}: {1} / {2}".format(
@@ -102,7 +103,9 @@ class Network(object):
         neuron in the final layer has the highest activation."""
         test_results = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        result_count = sum(int(x == y) for (x, y) in test_results)
+        if (result_count > self.bestNetwork[1]) : self.bestNetwork = (self, result_count)
+        return result_count
     
     def cost_derivative(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /

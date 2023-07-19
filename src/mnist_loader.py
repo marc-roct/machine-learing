@@ -16,6 +16,9 @@ import gzip
 # Third-party libraries
 import numpy as np
 
+# Local class
+import network
+
 def load_data():
     """Return the MNIST data as a tuple containing the training data,
     the validation data, and the test data.
@@ -39,8 +42,7 @@ def load_data():
     That's done in the wrapper function ``load_data_wrapper()``, see
     below.
     """
-    f = gzip.open('../data/mnist.pkl.gz', 'rb')
-    print("wasup-----------------------------------------------------------------------------")
+    f = gzip.open('./data/mnist.pkl.gz', 'rb')
     training_data, validation_data, test_data = pickle.load(f, encoding='latin1')
     f.close()
     return (training_data, validation_data, test_data)
@@ -84,3 +86,15 @@ def vectorized_result(j):
     e = np.zeros((10, 1))
     e[j] = 1.0
     return e
+
+def save_network(network:network.Network):
+    with open('./data/network', 'wb') as out:
+      pickle.dump(network, out, pickle.HIGHEST_PROTOCOL)
+
+def load_network():
+    with open('./data/network', 'rb') as inp:
+      network = pickle.load(inp)
+      return network
+    
+
+    
